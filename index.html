@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="format-detection" content="telephone=no">
     <title>Sineedy Tattoo - Controle Financeiro</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Kaushan+Script&display=swap');
@@ -266,8 +267,21 @@
             font-weight: bold;
         }
 
-        .val-income { color: var(--primary); font-weight: bold; }
-        .val-expense { color: var(--danger); font-weight: bold; }
+        .val-income { color: var(--primary) !important; font-weight: bold; }
+        .val-expense { color: var(--danger) !important; font-weight: bold; }
+
+        .badge {
+            padding: 4px 8px;
+            border-radius: 4px;
+            color: white;
+            font-size: 0.85rem;
+            font-weight: bold;
+            display: inline-block;
+            text-align: center;
+        }
+        
+        .badge-income { background-color: var(--primary); }
+        .badge-expense { background-color: var(--danger); }
 
         .btn-delete {
             background-color: var(--danger);
@@ -536,14 +550,15 @@
             // Compatibilidade com registos antigos que não possuam instituição
             const institution = t.inst || '-';
             const displayType = t.type === 'income' ? 'Entrada' : 'Saída';
+            const badgeClass = t.type === 'income' ? 'badge-income' : 'badge-expense';
 
             tr.innerHTML = `
                 <td>${t.date.split('-').reverse().join('/')}</td>
                 <td>${institution}</td>
                 <td>${t.desc}</td>
-                <td>${displayType}</td>
+                <td><span class="badge ${badgeClass}">${displayType}</span></td>
                 <td class="${t.type === 'income' ? 'val-income' : 'val-expense'}">
-                    ${t.val.toFixed(2).replace('.', ',')}
+                    R$ ${t.val.toFixed(2).replace('.', ',')}
                 </td>
                 <td>${actionBtn}</td>
             `;
