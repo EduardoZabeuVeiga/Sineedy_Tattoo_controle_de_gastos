@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sineedy Tattoo - Controle Financeiro</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Kaushan+Script&display=swap');
+
+        :root {
+            --bg-color: #f4f7f6;
+            --container-bg: #ffffff;
+            --text-color: #333;
+            --border-color: #ddd;
+            --primary: #4CAF50;
+            --danger: #f44336;
+            --hover: #45a049;
+            --highlight-bg: #fffde7;
+            --highlight-border: #fbc02d;
+            --whatsapp: #25D366;
+            --whatsapp-hover: #128C7E;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1000px;
+            background: var(--container-bg);
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            text-align: center;
+            font-family: 'Kaushan Script', cursive;
+            font-size: 3.5rem;
+            color: #111;
+            margin: 10px 0 0 0;
+            letter-spacing: 1px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-top: 5px;
+            margin-bottom: 25px;
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+        }
+
+        h2 { text-align: center; }
+
+        /* Área de preenchimento super destacada para leigos */
+        .form-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 30px;
+            padding: 25px;
+            background: var(--highlight-bg);
+            border-radius: 10px;
+            border: 2px solid var(--highlight-border);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.08);
+        }
+
+        .form-group-title {
+            width: 100%;
+            margin: 0 0 10px 0;
+            font-size: 1.2rem;
+            color: #555;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .form-group input, .form-group select {
+            padding: 15px;
+            font-size: 1.1rem;
+            border: 2px solid #ccc;
+            border-radius: 6px;
+            flex: 1 1 200px;
+            transition: all 0.3s;
+        }
+
+        /* Foco claro nos campos selecionados */
+        .form-group input:focus, .form-group select:focus {
+            border-color: #2196F3;
+            box-shadow: 0 0 0 4px rgba(33, 150, 243, 0.2);
+            outline: none;
+        }
+
+        .form-group button {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 1.3rem;
+            padding: 15px;
+            border-radius: 6px;
+            flex: 1 1 100%;
+            transition: background-color 0.3s, transform 0.1s;
+            box-shadow: 0 4px 6px rgba(76, 175, 80, 0.3);
+        }
+
+        .form-group button:hover { 
+            background-color: var(--hover); 
+        }
+
+        .form-group button:active {
+            transform: scale(0.98);
+        }
+
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            gap: 10px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--border-color);
+            flex-wrap: wrap;
+        }
+
+        .controls-buttons {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: flex-end;
+        }
+
+        .controls button {
+            padding: 10px 15px;
+            border-radius: 4px;
+            font-size: 1rem;
+            font-weight: bold;
+        }
+
+        .btn-export {
+            background-color: #2196F3;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-export:hover { background-color: #0b7dda; }
+
+        .btn-import {
+            background-color: #9C27B0;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-import:hover { background-color: #7B1FA2; }
+
+        .btn-whatsapp {
+            background-color: var(--whatsapp);
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-whatsapp:hover { background-color: var(--whatsapp-hover); }
+
+        .btn-toggle {
+            background-color: #607D8B;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-toggle:hover { background-color: #455A64; }
+
+        .filter-panel {
+            display: none;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 20px;
+            padding: 20px;
+            background: #eef2f5;
+            border-radius: 8px;
+            border: 1px dashed #90a4ae;
+        }
+
+        .filter-panel.active {
+            display: flex;
+        }
+
+        .filter-panel > div {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            flex: 1 1 200px;
+        }
+
+        .filter-panel label {
+            font-weight: bold;
+            font-size: 0.9rem;
+            color: #455a64;
+        }
+
+        .filter-panel input, .filter-panel select {
+            padding: 10px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+
+        .summary {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .summary-card {
+            flex: 1;
+            padding: 20px 15px;
+            border-radius: 8px;
+            text-align: center;
+            font-weight: bold;
+            color: white;
+            font-size: 1.2rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            min-width: 150px;
+        }
+
+        .bg-income { background-color: var(--primary); }
+        .bg-expense { background-color: var(--danger); }
+        .bg-balance { background-color: #607D8B; }
+
+        /* Faz a tabela dar scroll na horizontal em telas pequenas */
+        .table-responsive {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+            font-size: 1rem;
+            min-width: 600px;
+        }
+
+        th, td {
+            padding: 14px 12px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        th { 
+            background-color: #f1f1f1; 
+            font-weight: bold;
+        }
+
+        .val-income { color: var(--primary); font-weight: bold; }
+        .val-expense { color: var(--danger); font-weight: bold; }
+
+        .btn-delete {
+            background-color: var(--danger);
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .btn-restore {
+            background-color: #FF9800;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .voided {
+            text-decoration: line-through;
+            background-color: #f9f9f9;
+        }
+
+        .voided td {
+            color: #999 !important;
+            opacity: 0.6;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Sineedy Tattoo</h1>
+    <p class="subtitle">Controle Financeiro</p>
+
+    <!-- Área de Lançamento Destacada -->
+    <div class="form-group">
+        <div class="form-group-title">📝 Novo Lançamento</div>
+        
+        <input type="date" id="dateInput" required title="Data do Lançamento">
+        
+        <input type="text" id="instInput" placeholder="Instituição / Local" list="instList">
+        <datalist id="instList">
+            <option value="Tatuagem"></option>
+            <option value="Padaria"></option>
+            <option value="Gasolina"></option>
+            <option value="Cartão Roldão"></option>
+            <option value="Parcela do Terreno"></option>
+            <option value="Parcela do Carro"></option>
+            <option value="Sineedy Tattoo"></option>
+            <option value="Dani"></option>
+            <option value="Denis"></option>
+            <option value="Erika"></option>
+            <option value="Água"></option>
+            <option value="Galão de Água"></option>
+            <option value="Luz"></option>
+            <option value="Cartao Denis"></option>
+            <option value="Internet"></option>
+            <option value="Telefone"></option>
+            <option value="Mercado"></option>
+            <option value="Estacionamento"></option>
+            <option value="Farmácia"></option>
+            <option value="Restaurante / Lanche"></option>
+            <option value="Aluguel"></option>
+        </datalist>
+        
+        <input type="text" id="descInput" placeholder="Descrição (Opcional)">
+        <input type="number" id="valInput" placeholder="Valor (€/R$)" step="0.01" required>
+        
+        <select id="typeInput" required>
+            <option value="" disabled selected hidden>Selecione: Entrada ou Saída</option>
+            <option value="income">Entrada (Receita)</option>
+            <option value="expense">Saída (Despesa)</option>
+        </select>
+        
+        <button onclick="addTransaction()">Registrar Lançamento</button>
+    </div>
+
+    <div class="controls">
+        <button class="btn-toggle" onclick="toggleFilters()">Filtros e Pesquisa 🔍</button>
+        <div class="controls-buttons">
+            <input type="file" id="csvFileInput" accept=".csv" style="display: none;" onchange="importCSV(event)">
+            <button class="btn-import" onclick="document.getElementById('csvFileInput').click()">Carregar Planilha</button>
+            <button class="btn-export" onclick="exportCSV()">Baixar Planilha</button>
+            <button class="btn-whatsapp" onclick="shareWhatsApp()">Enviar WhatsApp 📲</button>
+        </div>
+    </div>
+
+    <!-- Filtros Ocultos (Inclui a Data de Pesquisa) -->
+    <div id="filterPanel" class="filter-panel">
+        <div>
+            <label for="monthFilter">Filtrar por Mês/Ano:</label>
+            <input type="month" id="monthFilter" onchange="renderApp()">
+        </div>
+        <div>
+            <label for="searchDesc">Pesquisar Descrição:</label>
+            <input type="text" id="searchDesc" placeholder="Ex: mercado..." oninput="renderApp()">
+        </div>
+        <div>
+            <label for="searchInst">Instituição:</label>
+            <input type="text" id="searchInst" placeholder="Ex: luz..." list="instList" oninput="renderApp()">
+        </div>
+        <div>
+            <label for="filterType">Tipo:</label>
+            <select id="filterType" onchange="renderApp()">
+                <option value="all">Todos os Tipos</option>
+                <option value="income">Apenas Entradas</option>
+                <option value="expense">Apenas Saídas</option>
+            </select>
+        </div>
+        <div>
+            <label for="filterStatus">Status:</label>
+            <select id="filterStatus" onchange="renderApp()">
+                <option value="all" selected>Todos os Status</option>
+                <option value="active">Apenas Ativos</option>
+                <option value="voided">Apenas Anulados</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="summary">
+        <div class="summary-card bg-income">
+            Entradas<br><span id="totalIncome">0,00</span>
+        </div>
+        <div class="summary-card bg-expense">
+            Saídas<br><span id="totalExpense">0,00</span>
+        </div>
+        <div class="summary-card bg-balance">
+            Saldo<br><span id="totalBalance">0,00</span>
+        </div>
+    </div>
+
+    <div class="table-responsive">
+        <table>
+            <thead>
+                <tr>
+                    <th>Data</th>
+                    <th>Instituição</th>
+                    <th>Descrição</th>
+                    <th>Tipo</th>
+                    <th>Valor</th>
+                    <th>Ação</th>
+                </tr>
+            </thead>
+            <tbody id="tableBody">
+                </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+    // Inicialização dos dados via LocalStorage
+    let transactions = JSON.parse(localStorage.getItem('financeData')) || [];
+
+    // Define o filtro para o mês atual ao carregar
+    document.addEventListener("DOMContentLoaded", () => {
+        const today = new Date();
+        const yyyy = today.getFullYear();
+        const mm = String(today.getMonth() + 1).padStart(2, '0');
+        document.getElementById('monthFilter').value = `${yyyy}-${mm}`;
+        document.getElementById('dateInput').value = today.toISOString().split('T')[0];
+        renderApp();
+    });
+
+    function addTransaction() {
+        const date = document.getElementById('dateInput').value;
+        const inst = document.getElementById('instInput').value || '-';
+        const desc = document.getElementById('descInput').value || '-';
+        const val = parseFloat(document.getElementById('valInput').value);
+        const type = document.getElementById('typeInput').value;
+
+        if (!date || isNaN(val) || !type) {
+            alert("Preencha todos os campos obrigatórios (Data, Valor e o Tipo de Lançamento).");
+            return;
+        }
+
+        const transaction = {
+            id: Date.now(),
+            date,
+            inst,
+            desc,
+            val,
+            type,
+            isVoided: false
+        };
+
+        transactions.push(transaction);
+        saveData();
+        renderApp();
+
+        // Limpa campos (mantém apenas a data preenchida)
+        document.getElementById('instInput').value = '';
+        document.getElementById('descInput').value = '';
+        document.getElementById('valInput').value = '';
+        document.getElementById('typeInput').value = '';
+    }
+
+    // Apenas marca o registo como anulado e risca-o. Não apaga os dados!
+    function toggleVoidTransaction(id) {
+        const index = transactions.findIndex(t => t.id === id);
+        if (index !== -1) {
+            transactions[index].isVoided = !transactions[index].isVoided;
+            saveData();
+            renderApp();
+        }
+    }
+
+    function saveData() {
+        localStorage.setItem('financeData', JSON.stringify(transactions));
+    }
+
+    function toggleFilters() {
+        const panel = document.getElementById('filterPanel');
+        panel.classList.toggle('active');
+    }
+
+    function renderApp() {
+        const filter = document.getElementById('monthFilter').value; // Formato: YYYY-MM
+        const searchDesc = document.getElementById('searchDesc') ? document.getElementById('searchDesc').value.toLowerCase() : '';
+        const searchInst = document.getElementById('searchInst') ? document.getElementById('searchInst').value.toLowerCase() : '';
+        const filterType = document.getElementById('filterType') ? document.getElementById('filterType').value : 'all';
+        const filterStatus = document.getElementById('filterStatus') ? document.getElementById('filterStatus').value : 'all';
+
+        const tbody = document.getElementById('tableBody');
+        tbody.innerHTML = '';
+
+        let income = 0;
+        let expense = 0;
+
+        // Filtrar transações pelo mês/ano selecionado
+        let filteredTransactions = transactions.filter(t => t.date.startsWith(filter));
+
+        // Aplicar filtros avançados
+        filteredTransactions = filteredTransactions.filter(t => {
+            const matchDesc = t.desc.toLowerCase().includes(searchDesc);
+            const matchInst = (t.inst || '-').toLowerCase().includes(searchInst);
+            const matchType = filterType === 'all' || t.type === filterType;
+            
+            let matchStatus = true;
+            if (filterStatus === 'active') matchStatus = !t.isVoided;
+            if (filterStatus === 'voided') matchStatus = t.isVoided;
+
+            return matchDesc && matchInst && matchType && matchStatus;
+        });
+
+        // Ordenar por data (mais recente primeiro)
+        filteredTransactions.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+        filteredTransactions.forEach(t => {
+            // Soma apenas se não estiver anulado
+            if (!t.isVoided) {
+                if (t.type === 'income') income += t.val;
+                if (t.type === 'expense') expense += t.val;
+            }
+
+            const tr = document.createElement('tr');
+            if (t.isVoided) tr.classList.add('voided');
+
+            const actionBtn = t.isVoided 
+                ? `<button class="btn-restore" onclick="toggleVoidTransaction(${t.id})">Restaurar</button>`
+                : `<button class="btn-delete" onclick="toggleVoidTransaction(${t.id})">Anular</button>`;
+
+            // Compatibilidade com registos antigos que não possuam instituição
+            const institution = t.inst || '-';
+            const displayType = t.type === 'income' ? 'Entrada' : 'Saída';
+
+            tr.innerHTML = `
+                <td>${t.date.split('-').reverse().join('/')}</td>
+                <td>${institution}</td>
+                <td>${t.desc}</td>
+                <td>${displayType}</td>
+                <td class="${t.type === 'income' ? 'val-income' : 'val-expense'}">
+                    ${t.val.toFixed(2).replace('.', ',')}
+                </td>
+                <td>${actionBtn}</td>
+            `;
+            tbody.appendChild(tr);
+        });
+
+        const balance = income - expense;
+
+        document.getElementById('totalIncome').innerText = `${income.toFixed(2).replace('.', ',')}`;
+        document.getElementById('totalExpense').innerText = `${expense.toFixed(2).replace('.', ',')}`;
+        document.getElementById('totalBalance').innerText = `${balance.toFixed(2).replace('.', ',')}`;
+    }
+
+    function generateCSVContent() {
+        let csvContent = "Data;Instituicao;Descricao;Tipo;Valor;Status\n";
+        const exportData = [...transactions].sort((a, b) => new Date(b.date) - new Date(a.date));
+
+        exportData.forEach(t => {
+            const dataFormatada = t.date.split('-').reverse().join('/');
+            const inst = t.inst || '-';
+            const tipo = t.type === 'income' ? 'Receita' : 'Despesa';
+            const valorFormatado = t.val.toFixed(2).replace('.', ','); 
+            const status = t.isVoided ? 'Anulado' : 'Ativo';
+            
+            csvContent += `${dataFormatada};${inst};${t.desc};${tipo};${valorFormatado};${status}\n`;
+        });
+        return csvContent;
+    }
+
+    function exportCSV() {
+        if (transactions.length === 0) {
+            alert("Não há dados para exportar.");
+            return;
+        }
+
+        const csvContent = generateCSVContent();
+        const blob = new Blob(["\uFEFF" + csvContent], { type: 'text/csv;charset=utf-8;' });
+        const link = document.createElement("a");
+        const url = URL.createObjectURL(blob);
+        
+        link.setAttribute("href", url);
+        link.setAttribute("download", "controlo_de_gastos.csv");
+        link.style.visibility = 'hidden';
+        
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    }
+
+    // Função de Compartilhar no WhatsApp
+    async function shareWhatsApp() {
+        if (transactions.length === 0) {
+            alert("Não há dados para compartilhar.");
+            return;
+        }
+
+        const csvContent = generateCSVContent();
+        const blob = new Blob(["\uFEFF" + csvContent], { type: 'text/csv;charset=utf-8;' });
+        const file = new File([blob], "backup_sineedy_tattoo.csv", { type: 'text/csv' });
+
+        // Tentar usar o Web Share API (funciona na maioria dos dispositivos móveis)
+        if (navigator.canShare && navigator.canShare({ files: [file] })) {
+            try {
+                await navigator.share({
+                    files: [file],
+                    title: 'Backup Controle Financeiro',
+                    text: 'Aqui está o backup do controle de gastos do Sineedy Tattoo.'
+                });
+            } catch (error) {
+                console.log('Compartilhamento cancelado ou não suportado:', error);
+            }
+        } else {
+            // Em navegadores de computador que não suportam partilha direta de ficheiros
+            alert("O seu navegador atual não suporta envio direto de ficheiros. O ficheiro vai ser baixado para o seu computador, para que o possa anexar manualmente no WhatsApp Web.");
+            exportCSV();
+        }
+    }
+
+    function importCSV(event) {
+        const file = event.target.files[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            // Remove o BOM (Byte Order Mark) se existir e divide por linhas
+            const text = e.target.result.replace(/^\uFEFF/, '');
+            const lines = text.split('\n');
+
+            let importedCount = 0;
+
+            // Começa no índice 1 para ignorar o cabeçalho
+            for (let i = 1; i < lines.length; i++) {
+                const line = lines[i].trim();
+                if (!line) continue; // Ignora linhas em branco
+
+                const parts = line.split(';');
+                
+                // Validação e compatibilidade entre versões de CSV (Antigo vs Novo)
+                let dateStr, inst, desc, typeStr, valStr, statusStr;
+
+                if (parts.length >= 6 && (parts[3] === 'Receita' || parts[3] === 'Despesa')) {
+                    dateStr = parts[0];
+                    inst = parts[1];
+                    desc = parts[2];
+                    typeStr = parts[3];
+                    valStr = parts[4];
+                    statusStr = parts[5];
+                } else if (parts.length >= 5 && (parts[2] === 'Receita' || parts[2] === 'Despesa')) {
+                    dateStr = parts[0];
+                    inst = '-';
+                    desc = parts[1];
+                    typeStr = parts[2];
+                    valStr = parts[3];
+                    statusStr = parts[4];
+                } else if (parts.length === 4 && (parts[2] === 'Receita' || parts[2] === 'Despesa')) {
+                    dateStr = parts[0];
+                    inst = '-';
+                    desc = parts[1];
+                    typeStr = parts[2];
+                    valStr = parts[3];
+                    statusStr = 'Ativo';
+                } else {
+                    continue; // Linha inválida ou cabeçalho mal formatado
+                }
+
+                const dateParts = dateStr.split('/'); // DD/MM/YYYY -> YYYY-MM-DD
+                if (dateParts.length !== 3) continue;
+                
+                const date = `${dateParts[2]}-${dateParts[1]}-${dateParts[0]}`;
+                const type = typeStr === 'Receita' ? 'income' : 'expense';
+                valStr = valStr.replace(',', '.'); // Troca vírgula por ponto para o JS
+                const val = parseFloat(valStr);
+                const isVoided = statusStr === 'Anulado';
+
+                if (!isNaN(val)) {
+                    transactions.push({
+                        id: Date.now() + i, // ID único para cada registo importado
+                        date,
+                        inst,
+                        desc,
+                        val,
+                        type,
+                        isVoided
+                    });
+                    importedCount++;
+                }
+            }
+
+            if (importedCount > 0) {
+                saveData();
+                renderApp();
+                alert(`${importedCount} lançamentos carregados com sucesso!`);
+            } else {
+                alert("Nenhum dado válido encontrado. Verifique se o formato do ficheiro está correto.");
+            }
+
+            // Repõe o valor do input para permitir carregar o mesmo ficheiro novamente se necessário
+            event.target.value = '';
+        };
+
+        reader.readAsText(file, 'utf-8');
+    }
+</script>
+
+</body>
+</html>
